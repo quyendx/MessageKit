@@ -93,6 +93,16 @@ public protocol MessagesDataSource: AnyObject {
     /// The default value returned by this method is `nil`.
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString?
 
+    /// The attributed text to be used for cell's trailing label.
+    ///
+    /// - Parameters:
+    ///   - message: The `MessageType` that will be displayed by this cell.
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// The default value returned by this method is `nil`.
+    func messageTrailingLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString?
+
 }
 
 public extension MessagesDataSource {
@@ -114,6 +124,10 @@ public extension MessagesDataSource {
     }
 
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        return nil
+    }
+
+    func messageTrailingLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         return nil
     }
 

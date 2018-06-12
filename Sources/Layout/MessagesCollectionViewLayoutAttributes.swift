@@ -46,7 +46,11 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
     public var messageBottomLabelAlignment = LabelAlignment(textAlignment: .center, textInsets: .zero)
     public var messageBottomLabelSize: CGSize = .zero
 
-    // MARK: - Methods
+    public var messageTrailingLabelAlignment = LabelAlignment(textAlignment: .right, textInsets: .zero)
+    public var messageTrailingLabelSize: CGSize = .zero
+    public var messageTrailingPosition: TrailingLabelPosition = TrailingLabelPosition(vertical: .messageBottom)
+
+    // MARK: - Methods 
 
     open override func copy(with zone: NSZone? = nil) -> Any {
         // swiftlint:disable force_cast
@@ -63,6 +67,10 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
         copy.messageTopLabelSize = messageTopLabelSize
         copy.messageBottomLabelAlignment = messageBottomLabelAlignment
         copy.messageBottomLabelSize = messageBottomLabelSize
+        copy.messageTrailingLabelAlignment = messageTrailingLabelAlignment
+        copy.messageTrailingLabelSize = messageTrailingLabelSize
+        copy.messageTrailingPosition = messageTrailingPosition
+
         return copy
         // swiftlint:enable force_cast
     }
@@ -82,6 +90,9 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
                 && attributes.messageTopLabelSize == messageTopLabelSize
                 && attributes.messageBottomLabelAlignment == messageBottomLabelAlignment
                 && attributes.messageBottomLabelSize == messageBottomLabelSize
+                && attributes.messageTrailingPosition == messageTrailingPosition
+                && attributes.messageTrailingLabelAlignment == messageTrailingLabelAlignment
+                && attributes.messageTrailingLabelSize == messageTrailingLabelSize
         } else {
             return false
         }

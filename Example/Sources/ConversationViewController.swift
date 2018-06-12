@@ -285,6 +285,14 @@ extension ConversationViewController: MessagesDataSource {
 
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
 
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        let dateString = formatter.string(from: message.sentDate)
+        return NSAttributedString(string: dateString, attributes: [NSAttributedStringKey.font: UIFont.preferredFont(forTextStyle: .caption2)])
+    }
+
+    func messageTrailingLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        formatter.dateFormat = "HH:mm"
         let dateString = formatter.string(from: message.sentDate)
         return NSAttributedString(string: dateString, attributes: [NSAttributedStringKey.font: UIFont.preferredFont(forTextStyle: .caption2)])
     }
@@ -371,6 +379,10 @@ extension ConversationViewController: MessagesLayoutDelegate {
 
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         return 16
+    }
+
+    func messageTrailingLabelWidth(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        return 34
     }
 
 }

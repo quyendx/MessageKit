@@ -81,6 +81,17 @@ public protocol MessagesLayoutDelegate: AnyObject {
     ///   The default value returned by this method is zero.
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat
 
+    /// Specifies the width for the message bubble's trailing label.
+    ///
+    /// - Parameters:
+    ///   - message: The `MessageType` that will be displayed for this cell.
+    ///   - indexPath: The `IndexPath` of the cell.
+    ///   - messagesCollectionView: The `MessagesCollectionView` in which this cell will be displayed.
+    ///
+    /// - Note:
+    ///   The default value returned by this method is zero.
+    func messageTrailingLabelWidth(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat
+
 }
 
 public extension MessagesLayoutDelegate {
@@ -102,6 +113,10 @@ public extension MessagesLayoutDelegate {
     }
 
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        return 0
+    }
+
+    func messageTrailingLabelWidth(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         return 0
     }
 }

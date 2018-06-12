@@ -60,6 +60,13 @@ open class MessageContentCell: MessageCollectionViewCell {
         return label
     }()
 
+    /// The left label of the messageBubble
+    open var messageTrailingLabel: InsetLabel = {
+        let label = InsetLabel()
+        label.numberOfLines = 0
+        return label
+    }()
+
     /// The `MessageCellDelegate` for the cell.
     open weak var delegate: MessageCellDelegate?
 
@@ -78,6 +85,7 @@ open class MessageContentCell: MessageCollectionViewCell {
         contentView.addSubview(messageTopLabel)
         contentView.addSubview(messageBottomLabel)
         contentView.addSubview(messageContainerView)
+        contentView.addSubview(messageTrailingLabel)
         contentView.addSubview(avatarView)
     }
 
@@ -86,6 +94,7 @@ open class MessageContentCell: MessageCollectionViewCell {
         cellTopLabel.text = nil
         messageTopLabel.text = nil
         messageBottomLabel.text = nil
+        messageTrailingLabel.text = nil
     }
 
     // MARK: - Configuration
@@ -98,6 +107,7 @@ open class MessageContentCell: MessageCollectionViewCell {
         layoutBottomLabel(with: attributes)
         layoutCellTopLabel(with: attributes)
         layoutMessageTopLabel(with: attributes)
+        layoutMessageTrailingLabel(with: attributes)
         layoutAvatarView(with: attributes)
     }
 
@@ -128,10 +138,12 @@ open class MessageContentCell: MessageCollectionViewCell {
         let topCellLabelText = dataSource.cellTopLabelAttributedText(for: message, at: indexPath)
         let topMessageLabelText = dataSource.messageTopLabelAttributedText(for: message, at: indexPath)
         let bottomText = dataSource.messageBottomLabelAttributedText(for: message, at: indexPath)
+        let trailingText = dataSource.messageTrailingLabelAttributedText(for: message, at: indexPath)
 
         cellTopLabel.attributedText = topCellLabelText
         messageTopLabel.attributedText = topMessageLabelText
         messageBottomLabel.attributedText = bottomText
+        messageTrailingLabel.attributedText = trailingText
     }
 
     /// Handle tap gesture on contentView and its subviews.
@@ -149,6 +161,8 @@ open class MessageContentCell: MessageCollectionViewCell {
             delegate?.didTapMessageTopLabel(in: self)
         case messageBottomLabel.frame.contains(touchLocation):
             delegate?.didTapMessageBottomLabel(in: self)
+        case messageTrailingLabel.frame.contains(touchLocation):
+            delegate?.didTapMessageTrailingLabel(in: self)
         default:
             break
         }
@@ -269,6 +283,41 @@ open class MessageContentCell: MessageCollectionViewCell {
         let origin = CGPoint(x: 0, y: y)
 
         messageBottomLabel.frame = CGRect(origin: origin, size: attributes.messageBottomLabelSize)
+    }
+
+    /// Positions the cell's left label.
+    /// - attributes: The `MessagesCollectionViewLayoutAttributes` for the cell.
+    open func layoutMessageTrailingLabel(with attributes: MessagesCollectionViewLayoutAttributes) {
+        guard attributes.messageTrailingLabelSize != .zero else { return }
+
+        messageTrailingLabel.textAlignment = attributes.messageTrailingLabelAlignment.textAlignment
+
+        var origin: CGPoint = .zero
+        switch attributes.avatarPosition.horizontal {
+        case .cellLeading:
+            origin.x = messageContainerView.frame.maxX + attributes.messageContainerPadding.right
+        case .cellTrailing:
+            origin.x = messageContainerView.frame.minX - attributes.messageContainerPadding.left - attributes.messageTrailingLabelSize.width
+        case .natural:
+            fatalError(MessageKitError.avatarPositionUnresolved)
+        }
+
+        switch attributes.messageTrailingPosition.vertical {
+        case .messageLabelTop:
+            origin.y = messageTopLabel.frame.minY
+        case .messageTop: // Needs messageContainerView frame to be set
+            origin.y = messageContainerView.frame.minY
+        case .messageBottom: // Needs messageContainerView frame to be set
+            origin.y = messageContainerView.frame.maxY - attributes.messageTrailingLabelSize.height
+        case .messageCenter: // Needs messageContainerView frame to be set
+            origin.y = messageContainerView.frame.midY - (attributes.messageTrailingLabelSize.height/2)
+        case .cellBottom:
+            origin.y = attributes.frame.height - attributes.messageTrailingLabelSize.height
+        default:
+            break
+        }
+
+        messageTrailingLabel.frame = CGRect(origin: origin, size: attributes.messageTrailingLabelSize)
     }
     
 }

@@ -24,10 +24,12 @@
 
 import Foundation
 
+public typealias TrailingLabelPosition = AvatarPosition
+
 /// Used to determine the `Horizontal` and `Vertical` position of
 // an `AvatarView` in a `MessageCollectionViewCell`.
 public struct AvatarPosition {
-    
+
     /// An enum representing the horizontal alignment of an `AvatarView`.
     public enum Horizontal {
         

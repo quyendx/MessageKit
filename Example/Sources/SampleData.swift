@@ -55,6 +55,25 @@ final internal class SampleData {
         "Price is rarely the most important thing. A cheap product might sell some units. Somebody gets it home and they feel great when they pay the money, but then they get it home and use it and the joy is gone."
     ]
 
+    let urls: [URL] = [
+        "https://leocardz.com/swift-link-preview-5a9860c7756f",
+        "https://www.nasa.gov/",
+        "https://www.theverge.com/2016/6/21/11996280/tesla-offer-solar-city-buy",
+        "http://bit.ly/14SD1eR",
+        "https://twitter.com",
+        "https://www.nationalgallery.org.uk",
+        "www.dji.com/matrice600-pro/info#specs",
+        "http://globo.com",
+        "https://uol.com.br",
+        "https://vnexpress.net/",
+        "https://www3.nhk.or.jp/",
+        "https://habrahabr.ru",
+        "https://www.youtube.com/watch?v=cv2mjAgFTaI",
+        "https://vimeo.com/67992157",
+        "https://lh6.googleusercontent.com/-aDALitrkRFw/UfQEmWPMQnI/AAAAAAAFOlQ/mDh1l4ej15k/w337-h697-no/db1969caa4ecb88ef727dbad05d5b5b3.jpg",
+        "https://goo.gl/jKCPgp"
+        ].compactMap { URL(string: $0) }
+
     let dan = Sender(id: "123456", displayName: "Dan Leonard")
     let steven = Sender(id: "654321", displayName: "Steven")
     let jobs = Sender(id: "000001", displayName: "Steve Jobs")
@@ -70,7 +89,7 @@ final internal class SampleData {
 
     var now = Date()
 
-    let messageTypes = ["Text", "Text", "Text", "AttributedText", "Photo", "Video", "Location", "Emoji"]
+    let messageTypes = ["Text", "Text", "Text", "AttributedText", "Photo", "Video", "Location", "Emoji", "Thumbnail", "Thumbnail"]
 
     let attributes = ["Font1", "Font2", "Font3", "Font4", "Color", "Combo"]
 
@@ -149,6 +168,7 @@ final internal class SampleData {
         let randomMessageType = Int(arc4random_uniform(UInt32(messageTypes.count)))
         let randomNumberLocation = Int(arc4random_uniform(UInt32(locations.count)))
         let randomNumberEmoji = Int(arc4random_uniform(UInt32(emojis.count)))
+        let randomNumberURL = Int(arc4random_uniform(UInt32(urls.count)))
         let uniqueID = NSUUID().uuidString
         let sender = senders[randomNumberSender]
         let date = dateAddingRandomTime()
@@ -169,6 +189,13 @@ final internal class SampleData {
             return MockMessage(location: locations[randomNumberLocation], sender: sender, messageId: uniqueID, date: date)
         case "Emoji":
             return MockMessage(emoji: emojis[randomNumberEmoji], sender: sender, messageId: uniqueID, date: date)
+        case "Thumbnail":
+            let numberOfURLs = Int(arc4random_uniform(32) % 2) + 1
+            var values: [URL] = []
+            for _ in 0..<numberOfURLs {
+                values.append(urls[randomNumberURL])
+            }
+            return MockMessage(text: messageTextValues[randomNumberText], urls: values, sender: sender, messageId: uniqueID, date: date)
         default:
             fatalError("Unrecognized mock message type")
         }

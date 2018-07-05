@@ -360,6 +360,14 @@ extension ConversationViewController: MessagesDisplayDelegate {
         
         return LocationMessageSnapshotOptions()
     }
+
+    func configureThumbnailMessageThumbnailView(_ thumnailView: ThumbnailView, thumbnailURL: URL, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+            thumnailView.titleLabel.text = "A list of indexes that together represent"
+            thumnailView.detailLabel.text = "Use this protocol to create your own message object to be used by MessageKit."
+            thumnailView.imageView.image = #imageLiteral(resourceName: "ic_camera")
+        })
+    }
 }
 
 // MARK: - MessagesLayoutDelegate

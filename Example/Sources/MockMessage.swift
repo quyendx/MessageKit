@@ -53,6 +53,16 @@ private struct MockMediaItem: MediaItem {
 
 }
 
+private struct MockThumbnailItem: ThumbnailItem {
+    var title: String
+    var previewCanonicalURLs: [URL]?
+
+    init(title: String, previewURLs: [URL]?) {
+        self.title = title
+        self.previewCanonicalURLs = previewURLs
+    }
+}
+
 internal struct MockMessage: MessageType {
 
     var messageId: String
@@ -92,6 +102,11 @@ internal struct MockMessage: MessageType {
 
     init(emoji: String, sender: Sender, messageId: String, date: Date) {
         self.init(kind: .emoji(emoji), sender: sender, messageId: messageId, date: date)
+    }
+
+    init(text: String, urls: [URL]?, sender: Sender, messageId: String, date: Date) {
+        let item = MockThumbnailItem(title: text, previewURLs: urls)
+        self.init(kind: .thumbnail(item), sender: sender, messageId: messageId, date: date)
     }
 
 }

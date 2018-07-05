@@ -189,6 +189,10 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
             let cell = messagesCollectionView.dequeueReusableCell(LocationMessageCell.self, for: indexPath)
             cell.configure(with: message, at: indexPath, and: messagesCollectionView)
             return cell
+        case .thumbnail:
+            let cell = messagesCollectionView.dequeueReusableCell(ThumbnailMessageCell.self, for: indexPath)
+            cell.configure(with: message, at: indexPath, and: messagesCollectionView)
+            return cell
         case .custom:
             fatalError(MessageKitError.customDataUnresolvedCell)
         }

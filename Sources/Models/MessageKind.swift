@@ -51,6 +51,9 @@ public enum MessageKind {
     /// An emoji message.
     case emoji(String)
 
+    /// A message with URL's thumbnail
+    case thumbnail(ThumbnailItem)
+
     /// A custom message.
     /// - Note: Using this case requires that you override the following methods and handle this case:
     ///   - `collectionView(_:cellForItemAt indexPath: IndexPath) -> UICollectionViewCell`

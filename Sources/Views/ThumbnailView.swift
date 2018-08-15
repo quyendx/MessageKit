@@ -82,7 +82,8 @@ open class ThumbnailView: UIView {
         // Constraints between components
         NSLayoutConstraint.activate([
             leftView.widthAnchor.constraint(equalToConstant: 2),
-            titleLabel.heightAnchor.constraint(equalToConstant: 20)
+            titleLabel.heightAnchor.constraint(equalToConstant: 20),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor)
         ])
 
         NSLayoutConstraint.activate([

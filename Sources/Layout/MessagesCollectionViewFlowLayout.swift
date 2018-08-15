@@ -222,6 +222,16 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
     public func setMessageOutgoingMessageBottomLabelAlignment(_ newAlignment: LabelAlignment) {
         messageSizeCalculators().forEach { $0.outgoingMessageBottomLabelAlignment = newAlignment }
     }
+
+    /// Set `incomingMessageTrailingLabelPadding` of all `MessageSizeCalculator`s
+    public func setMessageIncomingTrailingLabelPadding(_ newPadding: UIEdgeInsets) {
+        messageSizeCalculators().forEach { $0.incomingMessageTrailingLabelPadding = newPadding }
+    }
+
+    /// Set `outgoingMessageTrailingLabelPadding` of all `MessageSizeCalculator`s
+    public func setMessageOutgoingTrailingLabelPadding(_ newPadding: UIEdgeInsets) {
+        messageSizeCalculators().forEach { $0.outgoingMessageTrailingLabelPadding = newPadding }
+    }
     
     /// Get all `MessageSizeCalculator`s
     open func messageSizeCalculators() -> [MessageSizeCalculator] {

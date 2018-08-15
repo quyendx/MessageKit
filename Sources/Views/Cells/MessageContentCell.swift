@@ -285,9 +285,9 @@ open class MessageContentCell: MessageCollectionViewCell {
         var origin: CGPoint = .zero
         switch attributes.avatarPosition.horizontal {
         case .cellLeading:
-            origin.x = messageContainerView.frame.maxX + attributes.messageContainerPadding.right
+            origin.x = messageContainerView.frame.maxX + attributes.messageTrailingLabelPadding.left
         case .cellTrailing:
-            origin.x = messageContainerView.frame.minX - attributes.messageContainerPadding.left - attributes.messageTrailingLabelSize.width
+            origin.x = messageContainerView.frame.minX - attributes.messageTrailingLabelPadding.right - attributes.messageTrailingLabelSize.width
         case .natural:
             fatalError(MessageKitError.avatarPositionUnresolved)
         }

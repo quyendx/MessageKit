@@ -48,6 +48,7 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
 
     public var messageTrailingLabelAlignment = LabelAlignment(textAlignment: .right, textInsets: .zero)
     public var messageTrailingLabelSize: CGSize = .zero
+    public var messageTrailingLabelPadding: UIEdgeInsets = .zero
     public var messageTrailingPosition: TrailingLabelPosition = TrailingLabelPosition(vertical: .messageBottom)
 
     // MARK: - Methods 
@@ -69,6 +70,7 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
         copy.messageBottomLabelSize = messageBottomLabelSize
         copy.messageTrailingLabelAlignment = messageTrailingLabelAlignment
         copy.messageTrailingLabelSize = messageTrailingLabelSize
+        copy.messageTrailingLabelPadding = messageTrailingLabelPadding
         copy.messageTrailingPosition = messageTrailingPosition
 
         return copy
@@ -93,6 +95,7 @@ open class MessagesCollectionViewLayoutAttributes: UICollectionViewLayoutAttribu
                 && attributes.messageTrailingPosition == messageTrailingPosition
                 && attributes.messageTrailingLabelAlignment == messageTrailingLabelAlignment
                 && attributes.messageTrailingLabelSize == messageTrailingLabelSize
+                && attributes.messageTrailingLabelPadding == messageTrailingLabelPadding
         } else {
             return false
         }

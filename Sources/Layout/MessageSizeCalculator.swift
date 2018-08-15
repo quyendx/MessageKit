@@ -52,6 +52,8 @@ open class MessageSizeCalculator: CellSizeCalculator {
 
     public var incomingMessageTrailingLabelPosition = TrailingLabelPosition(vertical: .messageBottom)
     public var outgoingMessageTrailingLabelPosition = TrailingLabelPosition(vertical: .messageBottom)
+    public var incomingMessageTrailingLabelPadding = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
+    public var outgoingMessageTrailingLabelPadding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
 
     open override func configure(attributes: UICollectionViewLayoutAttributes) {
         guard let attributes = attributes as? MessagesCollectionViewLayoutAttributes else { return }
@@ -75,6 +77,7 @@ open class MessageSizeCalculator: CellSizeCalculator {
         attributes.messageTrailingLabelAlignment = messageTrailingLabelAlignment(for: message)
         attributes.messageTrailingLabelSize = messageTrailingLabelSize(for: message, at: indexPath)
         attributes.messageTrailingPosition = messageTrailingPosition(for: message)
+        attributes.messageTrailingLabelPadding = messageTrailingLabelPadding(for: message)
     }
 
     open override func sizeForItem(at indexPath: IndexPath) -> CGSize {
@@ -226,6 +229,12 @@ open class MessageSizeCalculator: CellSizeCalculator {
             position.horizontal = isFromCurrentSender ? .cellTrailing : .cellLeading
         }
         return position
+    }
+
+    public func messageTrailingLabelPadding(for message: MessageType) -> UIEdgeInsets {
+        let dataSource = messagesLayout.messagesDataSource
+        let isFromCurrentSender = dataSource.isFromCurrentSender(message: message)
+        return isFromCurrentSender ? outgoingMessageTrailingLabelPadding : incomingMessageTrailingLabelPadding
     }
 
     // MARK: - MessageContainer

@@ -37,14 +37,14 @@ open class ThumbnailMessageSizeCalculator: MessageSizeCalculator {
         messageContainerSize.width = maxWidth
 
         let messageInsets = messageLabelInsets(for: message)
-        messageContainerSize.width += (messageInsets.left + messageInsets.right)
-        messageContainerSize.height += (messageInsets.top + messageInsets.bottom)
+        messageContainerSize.width += messageInsets.horizontal
+        messageContainerSize.height += messageInsets.vertical
 
         // Add vertical size of thumbnails
         // TODO: Find an other way to calculate height of thumbnails view
-        var thumbnailViewsHeight: CGFloat = CGFloat(urls.count) * 54 + 16
+        var thumbnailViewsHeight: CGFloat = CGFloat(urls.count) * ThumbnailMessageCell.thumbnailHeight + ThumbnailMessageCell.spacingBetweenMessageLabelAndThumbnail
         if urls.count > 1 {
-            thumbnailViewsHeight += CGFloat(urls.count) * 13
+            thumbnailViewsHeight += CGFloat(urls.count - 1) * ThumbnailMessageCell.spacingBetweenThumbnails
         }
         messageContainerSize.height += thumbnailViewsHeight
 
@@ -61,14 +61,5 @@ open class ThumbnailMessageSizeCalculator: MessageSizeCalculator {
 
         attributes.messageLabelInsets = messageLabelInsets(for: message)
         attributes.messageLabelFont = messageLabelFont
-
-        switch message.kind {
-        case .attributedText(let text):
-            guard !text.string.isEmpty else { return }
-            guard let font = text.attribute(.font, at: 0, effectiveRange: nil) as? UIFont else { return }
-            attributes.messageLabelFont = font
-        default:
-            break
-        }
     }
 }

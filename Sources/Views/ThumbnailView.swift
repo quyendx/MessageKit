@@ -34,6 +34,13 @@ open class ThumbnailView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
+        // Add border to image view
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 8
+
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor(red: 243/255.0, green: 243/255.0, blue: 243/255.0, alpha: 1.0).cgColor
+
         return imageView
     }()
 
@@ -64,7 +71,7 @@ open class ThumbnailView: UIView {
 
         // Horizontal constraints
         addConstraints(
-            NSLayoutConstraint.constraints(withVisualFormat: "H:|[leftView]-[titleLabel]-5-[imageView]|", options: .alignAllTop, metrics: nil, views: ["leftView": leftView, "titleLabel": titleLabel, "imageView": imageView])
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|[leftView]-[titleLabel]-5-[imageView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["leftView": leftView, "titleLabel": titleLabel, "imageView": imageView])
         )
 
         // Vertical constraints of `leftView`
@@ -81,12 +88,13 @@ open class ThumbnailView: UIView {
         NSLayoutConstraint.activate([
             detailLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             detailLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
             bottomAnchor.constraint(equalTo: detailLabel.bottomAnchor, constant: 2)
         ])
 
         NSLayoutConstraint.activate([
-            bottomAnchor.constraint(equalTo: imageView.bottomAnchor),
+            bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 2),
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 2),
             imageView.widthAnchor.constraint(equalToConstant: 50),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor)
         ])

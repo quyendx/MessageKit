@@ -8,12 +8,17 @@
 import UIKit
 
 class ThumbnailMessageCell: MessageContentCell {
+    static let spacingBetweenThumbnails: CGFloat = 22
+    static let spacingBetweenMessageLabelAndThumbnail: CGFloat = 16
+    static let thumbnailHeight: CGFloat = 54
+    static let maximumThumbnails: Int  = 5
+
     private lazy var thumbnailStackView: UIStackView = {
         let stackView = UIStackView(frame: .zero)
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
-        stackView.spacing = 12
+        stackView.spacing = ThumbnailMessageCell.spacingBetweenThumbnails / 2
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
         return stackView
@@ -29,6 +34,7 @@ class ThumbnailMessageCell: MessageContentCell {
         }
     }
 
+    private lazy var messageLabelTopAnchor = messageLabel.topAnchor.constraint(equalTo: messageContainerView.topAnchor)
     private lazy var thumbnailStackViewLeftAnchor = thumbnailStackView.leftAnchor.constraint(equalTo: messageContainerView.leftAnchor)
     private lazy var thumbnailStackViewRightAnchor = messageContainerView.rightAnchor.constraint(equalTo: thumbnailStackView.rightAnchor)
     private lazy var thumbnailStackViewBottomAnchor = messageContainerView.bottomAnchor.constraint(equalTo: thumbnailStackView.bottomAnchor)
@@ -37,11 +43,13 @@ class ThumbnailMessageCell: MessageContentCell {
         super.apply(layoutAttributes)
 
         if let attributes = layoutAttributes as? MessagesCollectionViewLayoutAttributes {
-            messageLabel.textInsets = attributes.messageLabelInsets
+            let insets = UIEdgeInsets(top: 0, left: attributes.messageLabelInsets.left, bottom: 0, right: attributes.messageLabelInsets.right)
+            messageLabel.textInsets = insets
             messageLabel.font = attributes.messageLabelFont
 
             // Update constraints value
-            thumbnailStackViewLeftAnchor.constant = messageLabel.textInsets.left
+            messageLabelTopAnchor.constant = attributes.messageLabelInsets.top
+            thumbnailStackViewLeftAnchor.constant = attributes.messageLabelInsets.left
             thumbnailStackViewRightAnchor.constant = attributes.messageLabelInsets.right
             thumbnailStackViewBottomAnchor.constant = attributes.messageLabelInsets.bottom
         }
@@ -57,15 +65,16 @@ class ThumbnailMessageCell: MessageContentCell {
 
     open func setupConstraints() {
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
-        messageLabel.setContentCompressionResistancePriority(UILayoutPriority(755), for: .vertical)
         NSLayoutConstraint.activate([
-            messageLabel.topAnchor.constraint(equalTo: messageContainerView.topAnchor),
+            messageLabelTopAnchor,
             messageLabel.leftAnchor.constraint(equalTo: messageContainerView.leftAnchor),
             messageLabel.rightAnchor.constraint(equalTo: messageContainerView.rightAnchor)
-            ])
+        ])
 
+        thumbnailStackView.setContentCompressionResistancePriority(UILayoutPriority(755), for: .vertical)
+        thumbnailStackView.setContentHuggingPriority(UILayoutPriority(255), for: .vertical)
         NSLayoutConstraint.activate([
-            thumbnailStackView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 16),
+            thumbnailStackView.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: ThumbnailMessageCell.spacingBetweenMessageLabelAndThumbnail),
             thumbnailStackViewLeftAnchor,
             thumbnailStackViewRightAnchor,
             thumbnailStackViewBottomAnchor
@@ -75,8 +84,8 @@ class ThumbnailMessageCell: MessageContentCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        messageLabel.text = nil
         messageLabel.attributedText = nil
+        messageLabel.text = nil
 
         for subView in thumbnailStackView.subviews {
             thumbnailStackView.removeArrangedSubview(subView)
@@ -88,7 +97,7 @@ class ThumbnailMessageCell: MessageContentCell {
         super.configure(with: message, at: indexPath, and: messagesCollectionView)
 
         guard let displayDelegate = messagesCollectionView.messagesDisplayDelegate else {
-            fatalError("Message display delegate must not be nil")
+            fatalError(MessageKitError.nilMessagesDisplayDelegate)
         }
 
         let enabledDetectors = displayDelegate.enabledDetectors(for: message, at: indexPath, in: messagesCollectionView)
@@ -103,6 +112,9 @@ class ThumbnailMessageCell: MessageContentCell {
                 let textColor = displayDelegate.textColor(for: message, at: indexPath, in: messagesCollectionView)
                 messageLabel.text = content.title
                 messageLabel.textColor = textColor
+                if let font = messageLabel.messageLabelFont {
+                    messageLabel.font = font
+                }
             default:
                 break
             }
@@ -114,21 +126,22 @@ class ThumbnailMessageCell: MessageContentCell {
             return
         }
 
-        // Maximum first two urls
-        for (index, url) in urls.enumerated() where index < 2 {
+        // First five urls
+        for (index, url) in urls.enumerated() where index < ThumbnailMessageCell.maximumThumbnails {
             // Add hozirontal separator lines
             if index > 0 {
                 let separatorView = UIView(frame: .zero)
                 separatorView.backgroundColor = .clear
-                separatorView.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 0.5)
+                separatorView.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
                 NSLayoutConstraint.activate([
-                    separatorView.heightAnchor.constraint(equalToConstant: 2)
+                    separatorView.heightAnchor.constraint(equalToConstant: 0.5)
                 ])
                 thumbnailStackView.addArrangedSubview(separatorView)
             }
 
             // Add thumbnail view
             let thumbnailView = ThumbnailView(frame: .zero)
+            thumbnailView.translatesAutoresizingMaskIntoConstraints = false
             thumbnailStackView.addArrangedSubview(thumbnailView)
             displayDelegate.configureThumbnailMessageThumbnailView(thumbnailView, thumbnailURL: url, for: message, at: indexPath, in: messagesCollectionView)
         }

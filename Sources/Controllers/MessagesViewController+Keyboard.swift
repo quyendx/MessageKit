@@ -48,17 +48,20 @@ extension MessagesViewController {
         }
     }
 
-    // Thanks to https://github.com/MessageKit/MessageKit/pull/787
     @objc
     private func handleKeyboardDidChangeState(_ notification: Notification) {
         guard !isMessagesControllerBeingDismissed else { return }
 
-        guard let keyboardStartFrameInScreenCoords = notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? CGRect else { return }
-        guard !keyboardStartFrameInScreenCoords.isEmpty else {
-            // WORKAROUND for what seems to be a bug in iPad's keyboard handling in iOS 11: we receive an extra spurious frame change
-            // notification when undocking the keyboard, with a zero starting frame and an incorrect end frame. The workaround is to
-            // ignore this notification.
-            return
+        // Because it is a bug with iPad's keyboard handling, so I check on iPad devices only.
+        // On iPhone, sometimes `keyboardStartFrameInScreenCoords` height is zero, sometimes not even the keyboard still display. So I ignore to check keyboard start frame.
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            guard let keyboardStartFrameInScreenCoords = notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? CGRect else { return }
+            guard !keyboardStartFrameInScreenCoords.isEmpty else {
+                // WORKAROUND for what seems to be a bug in iPad's keyboard handling in iOS 11: we receive an extra spurious frame change
+                // notification when undocking the keyboard, with a zero starting frame and an incorrect end frame. The workaround is to
+                // ignore this notification.
+                return
+            }
         }
 
         // Note that the check above does not exclude all notifications from an undocked keyboard, only the weird ones.
